@@ -1,0 +1,1 @@
+web: gunicorn blog_site.wsgipip install gunicorn
