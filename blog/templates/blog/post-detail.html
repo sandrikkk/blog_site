@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {{post.title}}
+{% endblock title %}
+
+{% block css_file %} 
+    <link rel="stylesheet" href="{% static 'blog/post-detail.css' %}" />
+{% endblock css_file %} 
+
+{% block body %}
+    <section id = "summary">
+        <h2>{{post.title}}</h2>
+        <div>
+            {% for tag in post_tags %}
+                <span class = "tag">{{tag.caption}}</span>
+            {% endfor %}
+        </div>
+        <article>
+            <img src="{{post.image.url}}" alt="{{post.title}}" />
+            <address>By <a href="malito:{{post.author.email}}">{{post.author}}</a></address>
+            <div>
+                Last Updated on <time> {{ post.date|date:"D d M Y" }}  </time>
+            </div>
+        </article>
+    </section>
+
+    <main>
+        {{post.content|linebreaks}}
+    </main>
+    <section id = "comments">
+        <ul>
+            {% for comment in comments %}
+                <li>
+                    <h2>{{comment.user_name}}</h2>
+                    <p>{{comment.text|linebreaks}}</p>
+                </li>
+            {% endfor %}
+        </ul>
+
+    </section>
+    <section id = "comment-form">
+        <h2>Your Comment</h2>
+        <form action = "{% url 'post-detail-page' post.slug %}" method = "POST">
+            {% csrf_token %}
+            {% for form_fields in cooment_form %}
+            <div class = "form-control">
+                {{form_fields.label_tag}}
+                {{form_fields}}
+                {{form_fields.errors}}
+            </div>
+            {% endfor %}
+            <button> Save Comment </button>
+        </form>
+    </section>
+{% endblock body %}
